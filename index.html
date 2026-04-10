@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
   <meta charset="UTF-8">
-  <title>Okiem Diabetyka</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Okiem Diabetyka – panel kontroli metabolicznej</title>
+  <meta name="description" content="Kalkulatory HbA1c, BMI, WHR i WHtR – proste narzędzia kontroli zdrowia i cukrzycy.">
+  <meta name="keywords" content="cukrzyca, HbA1c, BMI, WHR, WHtR, glukoza, kalkulator">
+  <meta name="author" content="Okiem Diabetyka">
+
   <link rel="stylesheet" href="assets/style.css">
 </head>
+
 <body>
 
 <div id="header"></div>
@@ -12,28 +20,59 @@
 
 <main class="container">
 
-  <h1>Dashboard</h1>
+  <h1>Panel kontroli zdrowia</h1>
 
   <div class="grid">
 
+    <!-- HbA1c -->
     <div class="card">
-      <h2>Średnia glukoza (mg/dL)</h2>
-      <input type="number" id="avg" placeholder="np. 210" oninput="czyscHbA1c()">
+      <h2>HbA1c ↔ średnia glukoza</h2>
+
+      <input type="number" id="avg" placeholder="średnia mg/dL" oninput="clearHbA1c()">
+      <input type="number" id="hba1c" placeholder="HbA1c %" oninput="clearAvg()">
+
+      <button onclick="calcHbA1c()">Oblicz</button>
+
+      <p id="hba_msg"></p>
     </div>
 
+    <!-- BMI -->
     <div class="card">
-      <h2>HbA1c (%)</h2>
-      <input type="number" id="hba1c" placeholder="np. 8.5" oninput="czyscAvg()">
+      <h2>BMI</h2>
+
+      <input type="number" id="waga" placeholder="waga (kg)">
+      <input type="number" id="wzrost_bmi" placeholder="wzrost (cm)">
+
+      <button onclick="calcBMI()">Oblicz</button>
+
+      <p id="bmi_wynik"></p>
     </div>
 
+    <!-- WHR -->
     <div class="card">
-      <h2>Komunikat</h2>
-      <p id="komunikat">Wprowadź dane</p>
+      <h2>WHR (talia / biodra)</h2>
+
+      <input type="number" id="talia" placeholder="talia (cm)">
+      <input type="number" id="biodra" placeholder="biodra (cm)">
+
+      <button onclick="calcWHR()">Oblicz</button>
+
+      <p id="whr_wynik"></p>
+    </div>
+
+    <!-- WHtR -->
+    <div class="card">
+      <h2>WHtR (talia / wzrost)</h2>
+
+      <input type="number" id="talia2" placeholder="talia (cm)">
+      <input type="number" id="wzrost2" placeholder="wzrost (cm)">
+
+      <button onclick="calcWHtR()">Oblicz</button>
+
+      <p id="whtr_wynik"></p>
     </div>
 
   </div>
-
-  <button onclick="oblicz()">Oblicz</button>
 
 </main>
 
@@ -45,58 +84,117 @@
 loadComponent("header", "components/header.html");
 loadComponent("menu", "components/menu.html");
 loadComponent("footer", "components/footer.html");
+
 setTimeout(startClock, 200);
 
-// czyszczenie pól
-function czyscHbA1c() {
+//////////////////////////////////////////////////////
+// HbA1c
+//////////////////////////////////////////////////////
+
+function clearHbA1c() {
   document.getElementById("hba1c").value = "";
 }
-function czyscAvg() {
+
+function clearAvg() {
   document.getElementById("avg").value = "";
 }
 
-// główna logika
-function oblicz() {
+function calcHbA1c() {
   const avg = parseFloat(document.getElementById("avg").value);
   const hba = parseFloat(document.getElementById("hba1c").value);
 
   if (!isNaN(avg) && avg > 0) {
-    const wynik = ((avg + 46.7) / 28.7).toFixed(2);
-    document.getElementById("hba1c").value = wynik;
-    komunikat(wynik);
+    const res = ((avg + 46.7) / 28.7).toFixed(2);
+    document.getElementById("hba1c").value = res;
+    document.getElementById("hba_msg").innerText = statusHbA1c(res);
   } 
   else if (!isNaN(hba) && hba > 0) {
-    const wynik = (28.7 * hba - 46.7).toFixed(0);
-    document.getElementById("avg").value = wynik;
-    komunikat(hba);
+    const res = (28.7 * hba - 46.7).toFixed(0);
+    document.getElementById("avg").value = res;
+    document.getElementById("hba_msg").innerText = statusHbA1c(hba);
   } 
   else {
-    alert("Wpisz wartość w jednym polu");
+    alert("Wpisz jedną wartość");
   }
 }
 
-// komunikaty
-function komunikat(hba) {
-  let tekst = "";
+function statusHbA1c(v) {
+  if (v < 5.7) return "🟢 norma";
+  if (v < 6.5) return "🟡 stan graniczny";
+  if (v < 7.5) return "🟠 podwyższone";
+  if (v < 9) return "🔴 wysokie";
+  return "🚨 bardzo wysokie";
+}
 
-  if (hba < 5.7) {
-    tekst = "🟢 Norma – utrzymaj ten poziom";
-  } 
-  else if (hba < 6.5) {
-    tekst = "🟡 Blisko normy – pilnuj, żeby nie wzrosło";
-  } 
-  else if (hba < 7.5) {
-    tekst = "🟠 Do poprawy – jesteś blisko kontroli";
-  } 
-  else if (hba < 9) {
-    tekst = "🔴 Wysokie – działamy: dieta + ruch";
-  } 
-  else {
-    tekst = "🚨 Alarm – zacznij od podstaw (jedzenie + spacer)";
+//////////////////////////////////////////////////////
+// BMI
+//////////////////////////////////////////////////////
+
+function calcBMI() {
+  const waga = parseFloat(document.getElementById("waga").value);
+  const wzrost = parseFloat(document.getElementById("wzrost_bmi").value);
+
+  if (!waga || !wzrost || waga <= 0 || wzrost <= 0) {
+    alert("Podaj wagę i wzrost");
+    return;
   }
 
-  document.getElementById("komunikat").innerText = tekst;
+  const bmi = (waga / Math.pow(wzrost / 100, 2)).toFixed(2);
+
+  let msg = "";
+  if (bmi < 18.5) msg = "niedowaga";
+  else if (bmi < 25) msg = "norma";
+  else if (bmi < 30) msg = "nadwaga";
+  else msg = "otyłość";
+
+  document.getElementById("bmi_wynik").innerText = `BMI: ${bmi} (${msg})`;
 }
+
+//////////////////////////////////////////////////////
+// WHR
+//////////////////////////////////////////////////////
+
+function calcWHR() {
+  const t = parseFloat(document.getElementById("talia").value);
+  const b = parseFloat(document.getElementById("biodra").value);
+
+  if (!t || !b || t <= 0 || b <= 0) {
+    alert("Podaj talie i biodra");
+    return;
+  }
+
+  const whr = (t / b).toFixed(2);
+
+  let msg = "";
+  if (whr < 0.85) msg = "OK";
+  else msg = "ryzyko metaboliczne";
+
+  document.getElementById("whr_wynik").innerText = `WHR: ${whr} (${msg})`;
+}
+
+//////////////////////////////////////////////////////
+// WHtR
+//////////////////////////////////////////////////////
+
+function calcWHtR() {
+  const t = parseFloat(document.getElementById("talia2").value);
+  const w = parseFloat(document.getElementById("wzrost2").value);
+
+  if (!t || !w || t <= 0 || w <= 0) {
+    alert("Podaj talie i wzrost");
+    return;
+  }
+
+  const whtr = (t / w).toFixed(2);
+
+  let msg = "";
+  if (whtr < 0.5) msg = "🟢 OK";
+  else if (whtr < 0.6) msg = "🟡 podwyższone ryzyko";
+  else msg = "🔴 wysokie ryzyko";
+
+  document.getElementById("whtr_wynik").innerText = `WHtR: ${whtr} (${msg})`;
+}
+
 </script>
 
 </body>
