@@ -1,7 +1,22 @@
-<nav class="menu">
-  <a href="index.html">Dashboard</a>
-  <a href="#">Pomiary</a>
-  <a href="hba1c.html">HbA1c</a>
-  <a href="#">Dieta</a>
-  <a href="#">Notatki</a>
-</nav>
+<header class="topbar">
+  <div class="logo">Okiem Diabetyka</div>
+
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+  <nav class="nav" id="nav">
+
+    <a href="index.html" class="nav-link active">📊 Dashboard</a>
+
+    <div class="nav-item">
+      <a href="wskazniki.html" class="nav-link">📁 Wskaźniki ▾</a>
+
+      <div class="submenu">
+        <a href="hba1c.html">🧪 HbA1c</a>
+        <a href="bmi.html">⚖️ BMI</a>
+        <a href="whr.html">📏 WHR</a>
+        <a href="whtr.html">📐 WHTR</a>
+      </div>
+    </div>
+
+  </nav>
+</header>
