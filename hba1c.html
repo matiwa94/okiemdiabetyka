@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>HbA1c</title>
+  <title>Okiem Diabetyka</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -12,17 +12,28 @@
 
 <main class="container">
 
-  <h1>Kalkulator HbA1c</h1>
+  <h1>Dashboard</h1>
 
-  <div class="card">
-    <label>Średnia glukoza (mg/dL):</label>
-    <input type="number" id="avg" placeholder="np. 210">
+  <div class="grid">
 
-    <button onclick="obliczHbA1c()">Oblicz</button>
+    <div class="card">
+      <h2>Średnia glukoza (mg/dL)</h2>
+      <input type="number" id="avg" placeholder="np. 210" oninput="czyscHbA1c()">
+    </div>
 
-    <h2 id="wynik">HbA1c: -- %</h2>
-    <p id="opis"></p>
+    <div class="card">
+      <h2>HbA1c (%)</h2>
+      <input type="number" id="hba1c" placeholder="np. 8.5" oninput="czyscAvg()">
+    </div>
+
+    <div class="card">
+      <h2>Komunikat</h2>
+      <p id="komunikat">Wprowadź dane</p>
+    </div>
+
   </div>
+
+  <button onclick="oblicz()">Oblicz</button>
 
 </main>
 
@@ -31,34 +42,61 @@
 <script src="assets/app.js"></script>
 
 <script>
-  loadComponent("header", "components/header.html");
-  loadComponent("menu", "components/menu.html");
-  loadComponent("footer", "components/footer.html");
+loadComponent("header", "components/header.html");
+loadComponent("menu", "components/menu.html");
+loadComponent("footer", "components/footer.html");
+setTimeout(startClock, 200);
 
-  setTimeout(startClock, 200);
+// czyszczenie pól
+function czyscHbA1c() {
+  document.getElementById("hba1c").value = "";
+}
+function czyscAvg() {
+  document.getElementById("avg").value = "";
+}
 
-  function obliczHbA1c() {
-    const avg = parseFloat(document.getElementById("avg").value);
+// główna logika
+function oblicz() {
+  const avg = parseFloat(document.getElementById("avg").value);
+  const hba = parseFloat(document.getElementById("hba1c").value);
 
-    if (isNaN(avg) || avg <= 0) {
-      alert("Podaj poprawną średnią");
-      return;
-    }
-
-    const hba1c = ((avg + 46.7) / 28.7).toFixed(2);
-
-    document.getElementById("wynik").innerText = "HbA1c: " + hba1c + " %";
-
-    // interpretacja (prosta)
-    let opis = "";
-
-    if (hba1c < 5.7) opis = "Norma";
-    else if (hba1c < 6.5) opis = "Stan przedcukrzycowy";
-    else if (hba1c < 8) opis = "Cukrzyca – umiarkowana kontrola";
-    else opis = "Wysokie HbA1c – do poprawy";
-
-    document.getElementById("opis").innerText = opis;
+  if (!isNaN(avg) && avg > 0) {
+    const wynik = ((avg + 46.7) / 28.7).toFixed(2);
+    document.getElementById("hba1c").value = wynik;
+    komunikat(wynik);
+  } 
+  else if (!isNaN(hba) && hba > 0) {
+    const wynik = (28.7 * hba - 46.7).toFixed(0);
+    document.getElementById("avg").value = wynik;
+    komunikat(hba);
+  } 
+  else {
+    alert("Wpisz wartość w jednym polu");
   }
+}
+
+// komunikaty
+function komunikat(hba) {
+  let tekst = "";
+
+  if (hba < 5.7) {
+    tekst = "🟢 Norma – utrzymaj ten poziom";
+  } 
+  else if (hba < 6.5) {
+    tekst = "🟡 Blisko normy – pilnuj, żeby nie wzrosło";
+  } 
+  else if (hba < 7.5) {
+    tekst = "🟠 Do poprawy – jesteś blisko kontroli";
+  } 
+  else if (hba < 9) {
+    tekst = "🔴 Wysokie – działamy: dieta + ruch";
+  } 
+  else {
+    tekst = "🚨 Alarm – zacznij od podstaw (jedzenie + spacer)";
+  }
+
+  document.getElementById("komunikat").innerText = tekst;
+}
 </script>
 
 </body>

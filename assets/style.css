@@ -1,8 +1,14 @@
+/* RESET I PODSTAWA */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f4f6f8;
   color: #222;
+  line-height: 1.5;
 }
 
 /* HEADER */
@@ -36,9 +42,14 @@ body {
   text-decoration: none;
   color: #1e66f5;
   font-weight: bold;
+  transition: 0.2s;
 }
 
-/* MAIN */
+.menu a:hover {
+  text-decoration: underline;
+}
+
+/* GŁÓWNY KONTAINER */
 .container {
   max-width: 900px;
   margin: 20px auto;
@@ -48,21 +59,55 @@ body {
 /* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 15px;
 }
 
-/* CARD */
+/* KARTY */
 .card {
   background: white;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
-.big {
-  font-size: 28px;
+.card h2 {
+  margin-top: 0;
+}
+
+/* INPUTY */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* BUTTON */
+button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #1e66f5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #174ec2;
+}
+
+/* KOMUNIKAT */
+#komunikat {
   font-weight: bold;
+  margin-top: 10px;
+  font-size: 16px;
 }
 
 /* FOOTER */
@@ -72,25 +117,5 @@ body {
   background: white;
   margin-top: 20px;
   border-top: 1px solid #ddd;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
-
-button {
-  padding: 10px 15px;
-  background: #1e66f5;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #174ec2;
+  font-size: 14px;
 }
