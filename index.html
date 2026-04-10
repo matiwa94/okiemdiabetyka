@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Okiem Diabetyka</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div id="header"></div>
+<div id="menu"></div>
+
+<main class="container">
+
+  <h1>Dashboard</h1>
+
+  <div class="grid">
+
+    <div class="card">
+      <h2>Średnia glukoza</h2>
+      <p class="big">210 mg/dL</p>
+    </div>
+
+    <div class="card">
+      <h2>Szacowane HbA1c</h2>
+      <p class="big">10.3%</p>
+    </div>
+
+    <div class="card">
+      <h2>Trend</h2>
+      <p>📉 lekki spadek</p>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <h2>Dziś</h2>
+    <ul>
+      <li>✔ Spacer 30 min</li>
+      <li>✔ 3 posiłki bez skoków</li>
+      <li>✔ woda 2L</li>
+    </ul>
+  </div>
+
+</main>
+
+<div id="footer"></div>
+
+<script src="assets/app.js"></script>
+<script>
+  loadComponent("header", "components/header.html");
+  loadComponent("menu", "components/menu.html");
+  loadComponent("footer", "components/footer.html");
+
+  setTimeout(startClock, 200);
+</script>
+
+</body>
+</html>
